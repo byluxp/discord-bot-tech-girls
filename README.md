@@ -2,13 +2,14 @@
 
 ## Objetivo
 
-Bot para a comunidade Tech Girls com integração ao Discord, API do TabNews e vagas na área tech.
+Desenvolver um bot para a comunidade Tech Girls, integrada ao Discord, que automatize o compartilhamento de notícias de tecnologia por meio da API do TabNews e divulgue vagas na área tech.
 
 ## Stack
 
 - Python
 - discord.py
 - PostgreSQL
+- Supabase
 - API TabNews
 
 ## Equipe
