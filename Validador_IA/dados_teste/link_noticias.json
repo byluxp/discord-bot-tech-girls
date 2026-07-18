@@ -1,0 +1,14 @@
+[ 
+    {
+    "assunto": "Lançamento de Nova IA",
+    "topicos": ["Inteligência Artificial", "Open Source"],
+    "tags": ["ia", "tecnologia", "python"],
+    "link": "https://tabnews.com.br/exemplo-noticia-123"
+    }, 
+    {
+    "assunto": "Notícia Nova",
+    "topicos": ["Programação", "Desenvolvimento"],
+    "tags": ["dev", "tecnologia"],
+    "link": "https://tabnews.com.br/noticia-nova-523"
+    }    
+]
