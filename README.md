@@ -6,7 +6,7 @@ Desenvolver um bot para a comunidade Tech Girls, integrada ao Discord, que autom
 
 ## Stack
 
-- Python
+- Python 3.14
 - discord.py
 - PostgreSQL
 - Supabase
@@ -16,5 +16,8 @@ Desenvolver um bot para a comunidade Tech Girls, integrada ao Discord, que autom
 
 - Thais
 - Maria
-- Lucinda
+- Lucila
+- Andressa
+
+- 
 
