@@ -19,5 +19,3 @@ Desenvolver um bot para a comunidade Tech Girls, integrada ao Discord, que autom
 - Lucila
 - Andressa
 
-- 
-
