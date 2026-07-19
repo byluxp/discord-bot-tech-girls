@@ -14,18 +14,17 @@ def main():
     print("   INICIANDO FLUXO PRINCIPAL DO BOT (TESTE DE IA)   ")
     print("====================================================\n")
 
-    # 3. Executa o validador que fará todo o trabalho de ler o arquivo,
     # raspar a web, consultar o prompt e chamar a API do Gemini
     dados_embed_json = enviar_para_ia_validar()
 
     # 4. Analisa o resultado retornado pelo validador
     if dados_embed_json is None:
-        print("[Erro] Ocorreu uma falha durante o processo de validação.")
+        print("Erro: Ocorreu uma falha durante o processo de validação.")
         return
 
     if dados_embed_json.get("relevante") is True:
-        print("[Main] Sucesso! A notícia foi aprovada pela IA.")
-        print("[Main] Dados recebidos prontos para o Embed do Discord:")
+        print("Sucesso! A notícia foi aprovada pela IA.")
+        print("Dados recebidos prontos para o Embed do Discord:")
 
         # Aqui sua equipe do bot pode extrair as informações limpas
         print(f"   - Tags geradas: {dados_embed_json.get('tags')}")
@@ -33,12 +32,12 @@ def main():
         print(f"   - Link da postagem: {dados_embed_json.get('link-de-acesso')}")
 
         print(
-            "\n[Próximo Passo] Repassar estes dados para a função que cria o card no Discord."
+            "\nPróximo passo: Repassar estes dados para a função que cria o card no Discord."
         )
 
     else:
         print(
-            "[Main] Fluxo encerrado: A notícia foi descartada por não ser relevante."
+            "Fluxo encerrado: A notícia foi descartada por não ser relevante."
         )
         print(f"   - Motivo do descarte: {dados_embed_json.get('justificativa')}")
 

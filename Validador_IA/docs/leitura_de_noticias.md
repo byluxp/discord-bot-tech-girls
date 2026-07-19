@@ -32,12 +32,16 @@ Se a notícia for REJEITADA, retorne exatamente assim:
     "justificativa": "Explicação curta do motivo do descarte."
 }
 
-Se a notícia for APROVADA, retorne exatamente com as chaves abaixo, gerando as tags apropriadas e um resumo técnico de exatamente 3 linhas:
+Se a notícia for APROVADA, retorne exatamente com as chaves abaixo. Siga rigidamente as restrições de tamanho:
 {
     "relevante": true,
-    "tags": ["exemplo1", "exemplo2", "exemplo3"],
-    "texto-resumo": "Linha 1 do resumo técnico aqui.\nLinha 2 do resumo técnico detalhando o impacto aqui.\nLinha 3 com a conclusão ou chamado para leitura aqui.",
-    "link-de-acesso": "Insira aqui a URL exata da notícia que foi analisada"
+    "tags": ["tag1", "tag2", "tag3"], 
+    "texto-resumo": "Linha 1 resumida.\nLinha 2 resumida.\nLinha 3 resumida.",
+    "link-de-acesso": "INSIRA_AQUI_A_URL_DA_NOTICIA"
 }
+
+RESTRICÕES CRÍTICAS PARA APROVAÇÃO:
+1. A lista "tags" deve conter NO MÁXIMO 3 itens (apenas as 3 palavras-chave mais importantes).
+2. O "texto-resumo" deve ter EXATAMENTE 3 linhas separadas por '\n', mas cada linha deve ser ultracurta, direta e concisa (máximo de 15 palavras por linha), focando apenas no fato principal, sem enrolação.
 
 ```
