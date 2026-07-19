@@ -8,8 +8,7 @@ Desenvolver um bot para a comunidade Tech Girls, integrada ao Discord, que autom
 
 - Python 3.14
 - discord.py
-- PostgreSQL
-- Supabase
+- SQLite Studio
 - API TabNews
 
 ## Equipe
@@ -19,5 +18,4 @@ Desenvolver um bot para a comunidade Tech Girls, integrada ao Discord, que autom
 - Lucila
 - Andressa
 
-- 
 
