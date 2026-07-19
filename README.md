@@ -21,6 +21,7 @@ Desenvolver um bot para a comunidade Tech Girls, integrada ao Discord, que autom
 ## Banco de Dados
 
 Tabela 1: noticias_postadas
+
 Guarda o ID da notícia, evitando duplicidade.
 
 Colunas
@@ -31,6 +32,7 @@ Colunas
 - postado_em - data em que a notícia foi postada no bot
 
 Tabela 2: canais_configurados
+
 Guarda em qual servidor/canal o bot deve postar
 
 Colunas
