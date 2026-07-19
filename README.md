@@ -24,17 +24,17 @@ Tabela 1: noticias_postadas
 Guarda o ID da notícia, evitando duplicidade.
 
 Colunas
-id_noticia - id da notícia conforme no site TabNews
-titulo - título da notícia postada no TabNews
-url - url da notícia
-autor - identificação de quem postou a notícia no site
-postado_em - data em que a notícia foi postada no bot
+- id_noticia - id da notícia conforme no site TabNews
+- titulo - título da notícia postada no TabNews
+- url - url da notícia
+- autor - identificação de quem postou a notícia no site
+- postado_em - data em que a notícia foi postada no bot
 
 Tabela 2: canais_configurados
 Guarda em qual servidor/canal o bot deve postar
 
 Colunas
-id_canal - id gerado internamente para o canal de notícias
-guild_id - id do servidor discord
-channel_id - identificador do discord
-criado_em - data de criação do servidor
+- id_canal - id gerado internamente para o canal de notícias
+- guild_id - id do servidor discord
+- channel_id - identificador do discord
+- criado_em - data de criação do servidor
