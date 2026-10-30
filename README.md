@@ -1,194 +1,61 @@
-# Discord Bot - Tech Girls
+# 🤖 Bot Tech Girls: minha contribuição (agente de IA)
 
-## Objetivo
+> Este repositório é o meu fork do [discord-bot-tech-girls](https://github.com/thaisattico/discord-bot-tech-girls), um bot de Discord feito em equipe pela comunidade **Tech Girls** (Thais, Maria, Andressa e eu) para compartilhar notícias de tecnologia e vagas da área.
+>
+> **Minha parte foi a integração de inteligência artificial:** o agente que lê cada notícia, decide se ela é relevante para a comunidade, resume e devolve um JSON validado para o bot publicar no Discord.
 
-Desenvolver um bot para a comunidade Tech Girls, integrada ao Discord, que automatize o compartilhamento de notícias de tecnologia por meio da API do TabNews e divulgue vagas na área tech.
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=FFE600)
+![Gemini](https://img.shields.io/badge/Gemini_API-8E75B2?style=flat-square&logo=googlegemini&logoColor=white)
+![BeautifulSoup](https://img.shields.io/badge/BeautifulSoup-59666C?style=flat-square)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
+![discord.py](https://img.shields.io/badge/discord.py-5865F2?style=flat-square&logo=discord&logoColor=white)
 
-## Equipe
+**7 pull requests aceitos no projeto original** ([ver os PRs](https://github.com/thaisattico/discord-bot-tech-girls/pulls?q=is%3Apr+author%3Abyluxp)).
 
-- Thais
-- Maria
-- Lucila
-- Andressa
-  
-## Stack
+---
 
-- Python 3.14
-- discord.py
-- SQLite Studio
-- API TabNews
+## 🧠 O agente de curadoria de notícias
 
-## Banco de Dados
+Arquivo principal: [`src/services/app_validador.py`](src/services/app_validador.py) · Prompt: [`docs/leitura_de_noticias.md`](docs/leitura_de_noticias.md)
 
-Tabela 1: noticias_postadas
-
-Guarda o ID da notícia, evitando duplicidade.
-
-Colunas
-- id_noticia - id da notícia conforme no site TabNews
-- titulo - título da notícia postada no TabNews
-- url - url da notícia
-- autor - identificação de quem postou a notícia no site
-- tag - classificador de assunto da notícia
-- postado_em - data em que a notícia foi postada no bot
-
-Tabela 2: canais_configurados
-
-Guarda em qual servidor/canal o bot deve postar
-
-Colunas
-- id_canal - id gerado internamente para o canal de notícias
-- id_guild - id do servidor discord
-- id_channel - identificador do discord
-- criado_em - data de criação do servidor
-
-## Como rodar com Docker
-
-### Pré-requisitos
-
-- [Docker](https://docs.docker.com/get-docker/) instalado
-- [Docker Compose](https://docs.docker.com/compose/install/) instalado (versão com plugin: `docker compose`)
-
-### 1) Configurar variáveis de ambiente
-
-Na raiz do projeto, crie seu arquivo `.env` a partir do exemplo:
-
-```bash
-cp .env.example .env
+```mermaid
+flowchart LR
+    A[📰 Notícia do TabNews] --> B[🔗 Valida e limpa a URL]
+    B --> C[🕸️ Web scraping<br/>BeautifulSoup, até 4.000 caracteres]
+    C --> D[🧠 Gemini com o prompt<br/>de curadoria]
+    D --> E[🧹 Limpa a resposta<br/>e lê o JSON]
+    E --> F{Contrato válido?}
+    F -- sim, relevante --> G[📨 Embed no Discord]
+    F -- sim, não relevante --> H[🗑️ Descarta com justificativa]
+    F -- não --> I[⚠️ Retorno inválido padronizado]
 ```
 
-Edite o arquivo `.env` e preencha **todas** as variáveis obrigatórias:
+### O que eu construí
+- **Prompt de curadoria** com o papel de curadora da comunidade: o que aprovar (linguagens e ferramentas, IA e dados, carreira e vagas, tutoriais, mulheres na tecnologia) e o que descartar (publicidade, fofoca corporativa, política, promoções).
+- **Saída estruturada em JSON**, pedida ao modelo com `response_mime_type="application/json"`:
+  ```json
+  {
+    "relevante": true,
+    "titulo": "Título da notícia",
+    "tags": ["IA", "Python"],
+    "texto-resumo": "Linha 1.\nLinha 2.\nLinha 3.",
+    "link-de-acesso": "https://..."
+  }
+  ```
+- **Validação do contrato antes de publicar**, porque um LLM nem sempre segue o formato:
+  - `relevante` precisa ser booleano; se for `false`, a `justificativa` é obrigatória;
+  - resumo com **exatamente 3 linhas** e no máximo 15 palavras por linha;
+  - no máximo 3 tags, sem repetição;
+  - URL válida.
+  Qualquer falha vira um retorno padronizado, e o bot nunca publica algo quebrado.
+- **Robustez:** remove blocos de Markdown que o modelo às vezes devolve, tenta outro modelo quando um falha e faz o scraping em outra thread para não travar o bot.
+- **Testes de validação** do retorno para os embeds e a **conteinerização com Docker** para a equipe rodar o bot do mesmo jeito.
 
-| Variável | Obrigatória para | Descrição |
-|---|---|---|
-| `GEMINI_API_KEY` | Validação de notícias | Chave da API do Google Gemini |
-| `BOT_TOKEN` | Bot Discord completo | Token do bot gerado no Discord Developer Portal |
-| `DEV_GUILD_ID` | Bot Discord completo | ID do servidor Discord para sincronização de comandos |
-| `RAPIDAPI_KEY` | Busca de vagas | Chave de autenticação da RapidAPI |
-| `RAPIDAPI_HOST` | Busca de vagas | Host da API JSearch (`jsearch.p.rapidapi.com`) |
-| `RAPIDAPI_ENDPOINT` | Busca de vagas | Endpoint da API (`/search-v2`) |
-| `JSEARCH_QUERY` | Busca de vagas | Query principal (ex: `software engineer`) |
-| `JSEARCH_FALLBACK_QUERY` | Busca de vagas | Query fallback (ex: `backend developer`) |
-| `JSEARCH_COUNTRY` | Busca de vagas | Código do país (ex: `br`) |
-| `JSEARCH_DATE_POSTED` | Busca de vagas | Filtro de data (ex: `all`) |
-| `JSEARCH_NUM_PAGES` | Busca de vagas | Número de páginas por requisição (ex: `1`) |
+### Também comecei
+- **Busca de vagas** ([`src/services/jobs_search.py`](src/services/jobs_search.py)): integração com a API JSearch (RapidAPI) filtrando vagas de tecnologia no Brasil. Ficou parcialmente concluída.
 
-> **Atenção:** sem o `BOT_TOKEN` e o `DEV_GUILD_ID` o bot se conectará mas não conseguirá sincronizar nenhum comando no servidor Discord.
+---
 
-## Busca de vagas (RapidAPI + JSearch)
+## 👥 O restante do projeto
 
-### 1) Como obter a API key da RapidAPI
-
-1. Acesse [RapidAPI](https://rapidapi.com/) e faça login (ou crie uma conta).
-2. Abra a API [JSearch](https://rapidapi.com/letscrape-6bRBa3QguO5/api/jsearch).
-3. Clique em **Subscribe to Test** e selecione o plano Basic/Free.
-4. Abra o Playground no endpoint **GET Job Search**.
-5. Copie a chave no header `x-rapidapi-key` do snippet em cURL.
-6. Cole a chave na variável `RAPIDAPI_KEY` do seu arquivo `.env`.
-
-### 2) Configuração recomendada no `.env`
-
-```env
-RAPIDAPI_HOST=jsearch.p.rapidapi.com
-RAPIDAPI_ENDPOINT=/search-v2
-JSEARCH_QUERY=software engineer
-JSEARCH_FALLBACK_QUERY=backend developer
-JSEARCH_COUNTRY=br
-JSEARCH_DATE_POSTED=all
-JSEARCH_NUM_PAGES=1
-```
-
-### 3) Testar a busca via terminal
-
-```bash
-set -a && source .env && set +a && \
-curl --request GET \
-	--url "https://${RAPIDAPI_HOST}${RAPIDAPI_ENDPOINT}?query=software%20engineer&num_pages=${JSEARCH_NUM_PAGES}&country=${JSEARCH_COUNTRY}&date_posted=${JSEARCH_DATE_POSTED}" \
-	--header "Content-Type: application/json" \
-	--header "x-rapidapi-host: ${RAPIDAPI_HOST}" \
-	--header "x-rapidapi-key: ${RAPIDAPI_KEY}"
-```
-
-Se estiver correto, a API retorna JSON com `"status":"OK"`.
-
-### 4) Como a busca de vagas funciona no bot
-
-1. O bot executa a task de vagas no cog de jobs.
-2. A função de busca faz 1 requisição com `JSEARCH_QUERY`.
-3. Se não houver vagas BR válidas, faz no máximo 1 fallback com `JSEARCH_FALLBACK_QUERY`.
-4. As vagas novas são enfileiradas e enviadas para os canais configurados.
-
-### 5) Erros comuns
-
-- `404 Endpoint does not exist`: confirme `RAPIDAPI_ENDPOINT=/search-v2`.
-- `403 You are not subscribed to this API`: assine a API JSearch na conta da chave usada.
-- `429 Too many requests`: limite de plano atingido; reduza frequência de testes.
-- Retorno vazio: ajuste as queries (`JSEARCH_QUERY` e `JSEARCH_FALLBACK_QUERY`) para termos simples.
-
-### 6) Consumo de requisições
-
-- Sem fallback: 1 requisição por ciclo de busca.
-- Com fallback: até 2 requisições por ciclo de busca.
-- Para testes de outras funções, é possível desativar temporariamente a chamada externa na função de busca.
-
-### 2) Build da imagem
-
-```bash
-docker compose build
-```
-
-### 3) Subir a aplicação
-
-```bash
-docker compose up
-```
-
-Para rodar em segundo plano:
-
-```bash
-docker compose up -d
-```
-
-### 4) Ver logs da execução
-
-```bash
-docker compose logs -f
-```
-
-### 5) Parar os containers
-
-No terminal clique CTRL + C
-
-Em seguida, rode:
-
-```bash
-docker compose down
-```
-
-## Fluxo executado no container
-
-O container executa o arquivo `src/bot.py`, que realiza em sequência:
-
-1. Carrega as variáveis de ambiente do arquivo `.env`
-2. Inicializa as tabelas do banco de dados SQLite (`bot_teste.db`) caso ainda não existam
-3. Conecta os "cogs" de tarefas (`tasks`) e configuração de canal (`setup_channel`)
-4. Sincroniza os slash commands no servidor Discord configurado em `DEV_GUILD_ID`
-5. Mantém o bot online e aguarda os horários programados para buscar e publicar notícias via TabNews + validação Gemini
-6. Executa o ciclo de busca de vagas via RapidAPI (JSearch) e envia para os canais configurados
-
-
-## Dependências
-
-Para rodar o bot e os serviços de busca de notícias, o projeto utiliza as seguintes bibliotecas Python:
-
-* **`discord.py`**: Framework para interação com a API do Discord.
-* **`aiohttp`**: Biblioteca assíncrona para requisições HTTP (instalada automaticamente junto com o `discord.py`), utilizada na integração com a API do TabNews.
-* **`httpx`**: Biblioteca assíncrona para requisições HTTP utilizada na integração com a API de vagas (RapidAPI/JSearch).
-* **`python-dotenv`**: Gerenciamento de variáveis de ambiente (chaves de API, ID do servidor de testes e tokens).
-
-### Para instalar as dependências
-No terminal, instale os pacotes necessários:
-
-```bash
-pip install discord.py python-dotenv httpx
-```
+A estrutura do bot (comandos de configuração, tarefas agendadas, banco SQLite, fila de notícias e canais de vagas) foi feita pelas outras integrantes da equipe. Documentação completa e instruções para rodar: [repositório original](https://github.com/thaisattico/discord-bot-tech-girls).
